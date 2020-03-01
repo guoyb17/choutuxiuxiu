@@ -2,3 +2,4 @@ env/
 .vscode/
 *.jpg
 *.png
+report.*

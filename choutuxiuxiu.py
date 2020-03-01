@@ -86,20 +86,33 @@ def main(ipt_img, opt_img, mode, param):
                     bitmap[iter_x][iter_y][2] = tmp2
     elif mode == "equalization":
         gray = src.convert('L')
-        bitmap = np.array(gray)
         bins = np.zeros(257)
         for i in range(257):
             bins[i] = i
         cdf = get_cdf(np.histogram(gray, bins, density=True)[0])
         for iter_x in range(height):
             for iter_y in range(width):
-                tmp = round(255 * cdf[bitmap[iter_x][iter_y]])
-                if tmp > 255:
-                    bitmap[iter_x][iter_y] = 255
-                elif tmp < 0:
-                    bitmap[iter_x][iter_y] = 0
+                tmp0 = round(255 * cdf[bitmap[iter_x][iter_y][0]])
+                tmp1 = round(255 * cdf[bitmap[iter_x][iter_y][1]])
+                tmp2 = round(255 * cdf[bitmap[iter_x][iter_y][2]])
+                if tmp0 > 255:
+                    bitmap[iter_x][iter_y][0] = 255
+                elif tmp0 < 0:
+                    bitmap[iter_x][iter_y][0] = 0
                 else:
-                    bitmap[iter_x][iter_y] = tmp
+                    bitmap[iter_x][iter_y][0] = tmp0
+                if tmp1 > 255:
+                    bitmap[iter_x][iter_y][1] = 255
+                elif tmp1 < 1:
+                    bitmap[iter_x][iter_y][1] = 0
+                else:
+                    bitmap[iter_x][iter_y][1] = tmp1
+                if tmp2 > 255:
+                    bitmap[iter_x][iter_y][2] = 255
+                elif tmp2 < 0:
+                    bitmap[iter_x][iter_y][2] = 0
+                else:
+                    bitmap[iter_x][iter_y][2] = tmp2
     dst = image.fromarray(bitmap)
     dst.save(opt_img)
 
